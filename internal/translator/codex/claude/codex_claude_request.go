@@ -220,10 +220,9 @@ func ConvertClaudeRequestToCodex(modelName string, inputRawJSON []byte, _ bool) 
 						if encryptedContent, ok := strings.CutPrefix(messageContentResult.Get("signature").String(), codexEncryptedContentPrefix); ok {
 							reasoningItem := []byte(`{"type":"reasoning"}`)
 							reasoningItem, _ = sjson.SetBytes(reasoningItem, "encrypted_content", encryptedContent)
-							if thinkingText := messageContentResult.Get("thinking").String(); thinkingText != "" {
-								reasoningItem, _ = sjson.SetBytes(reasoningItem, "summary.0.type", "summary_text")
-								reasoningItem, _ = sjson.SetBytes(reasoningItem, "summary.0.text", thinkingText)
-							}
+							thinkingText := messageContentResult.Get("thinking").String()
+							reasoningItem, _ = sjson.SetBytes(reasoningItem, "summary.0.type", "summary_text")
+							reasoningItem, _ = sjson.SetBytes(reasoningItem, "summary.0.text", thinkingText)
 							template, _ = sjson.SetRawBytes(template, "input.-1", reasoningItem)
 						}
 					}
